@@ -1,0 +1,8 @@
+#!/bin/bash
+if ( pacmd list-sinks | grep 'device.description = "headphones"' -B 26 | head -n1 | grep "headset_head_unit" > /dev/null ); then
+    echo Switching to a2dp
+    pacmd set-card-profile 4 a2dp_sink
+else
+    echo Switching to headset
+    pacmd set-card-profile 4 headset_head_unit
+fi

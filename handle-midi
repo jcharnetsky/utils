@@ -1,0 +1,18 @@
+#!/bin/bash
+aseqdump -p 20 | sed -nur 's/^.*note ([0-9]+).*/\1/p' | while read -r line; do
+    if [ -z $oldVol ]; then
+        oldVol=-100
+    fi
+
+    newVol=$line
+    newVol=$((120-newVol))
+    difference=$((newVol-oldVol))
+    difference=${difference#-}
+    if [ $difference -gt 3 ]; then
+        echo $newVol
+        amixer -q -D pulse sset Master $newVol%
+        oldVol=$newVol
+    elif [ "$difference" == "" ]; then
+        break
+    fi
+done
